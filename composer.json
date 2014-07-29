@@ -1,0 +1,8 @@
+{
+    "require": {
+        "silex/silex": "~1.2",
+        "symfony/http-kernel": "*",
+        "symfony/http-foundation": "*",
+        "doctrine/dbal": "2.2.*"
+    }
+}

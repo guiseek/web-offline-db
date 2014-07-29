@@ -1,0 +1,19 @@
+CACHE MANIFEST
+# Web off-line v1.
+index.html
+views/index.html
+css/style.css
+libs/bootstrap/dist/css/bootstrap.min.css
+libs/jquery/dist/jquery.min.js
+libs/bootstrap/dist/js/bootstrap.min.js
+libs/angular/angular.min.js
+libs/angular/angular-route.min.js
+libs/angular/angular-resource.min.js
+libs/angular/angular-cookies.min.js
+js/app.js
+js/directives/connectivity.js
+js/controllers/AppCtrl.js
+js/controllers/IndexCtrl.js
+js/services/NoteSvc.js
+NETWORK:
+*

@@ -1,0 +1,59 @@
+<div class="row">
+  <div class="col-md-12">
+    <nav class="navbar">
+      <button ng-click="sync()" class="rock-btn rock-btn-primary">Sincronizar</button>
+      <button ng-click="updateApp()" class="rock-btn rock-btn-warning">Atualizar</button>
+    </nav>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="alert alert-success alert-dismissible" role="alert" ng-show="flash.message">
+      <button type="button" class="close" data-dismiss="alert">
+        <span aria-hidden="true">&times;</span>
+        <span class="sr-only">Close</span>
+      </button>
+      <strong>OK!</strong> {{ flash.message }}
+    </div>
+    <form role="form">
+      <div class="form-group">
+        <label for="note">Nota</label>
+        <input type="text" name="note" ng-model="note.note" class="form-control">
+      </div>
+      <button ng-click="save()" class="rock-btn rock-btn-success pull-right">Salvar</button>
+    </form>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <table class="table" ng-init="list()">
+      <thead>
+        <tr>
+          <th style="width: 20px">#</th>
+          <th>Nota</th>
+          <th style="width: 180px">Última alteração</th>
+          <th style="width: 100px">Ação off</th>
+          <th style="width: 70px"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="note in notes" ng-class="{warning: note.off}">
+          <td>{{ note.id }}</td>
+          <td>{{ note.note }}</td>
+          <td>{{ note.updated }}</td>
+          <td>{{ note.off }}</td>
+          <td>
+            <div class="btn-group">
+              <button ng-click="update(note.id)" class="btn btn-default btn-xs">
+                <span class="glyphicon glyphicon-pencil"></span>
+              </button>
+              <button ng-click="delete(note.id)" class="btn btn-default btn-xs">
+                <span class="glyphicon glyphicon-trash"></span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
