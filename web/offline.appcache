@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# Web off-line v1.
+# Web off-line v1
 index.html
 views/index.html
 css/style.css
@@ -9,11 +9,13 @@ libs/bootstrap/dist/js/bootstrap.min.js
 libs/angular/angular.min.js
 libs/angular/angular-route.min.js
 libs/angular/angular-resource.min.js
-libs/angular/angular-cookies.min.js
 js/app.js
 js/directives/connectivity.js
 js/controllers/AppCtrl.js
 js/controllers/IndexCtrl.js
 js/services/NoteSvc.js
+libs/bootstrap/dist/fonts/glyphicons-halflings-regular.woff
+libs/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf
+libs/bootstrap/dist/fonts/glyphicons-halflings-regular.svg
 NETWORK:
 *

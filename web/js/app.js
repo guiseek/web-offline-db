@@ -2,7 +2,6 @@
 
 var app = angular.module('app', [
     'ngRoute',
-    'ngCookies',
     'app.services',
     'app.controllers',
     'app.directives'
@@ -18,6 +17,7 @@ app.config(['$routeProvider', '$httpProvider', '$locationProvider',
         otherwise({
             redirectTo: '/index'
         });
+        $httpProvider.defaults.headers.common.Authorization = '85e4a615f62c711d3aac0e7def5b4903';
     }
 ]);
 

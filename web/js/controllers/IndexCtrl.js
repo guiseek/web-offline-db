@@ -1,29 +1,29 @@
 'use strict';
 
 appCtrls.
-controller('IndexCtrl', ['$scope', 'NoteSvc', '$cookieStore', '$filter', 
-	function ($scope, NoteSvc, $cookieStore, $filter) {
-		if ($cookieStore.get('notes') == null) {
-			$cookieStore.put('notes', []);
+controller('IndexCtrl', ['$scope', 'NoteSvc', '$filter',
+	function ($scope, NoteSvc, $filter) {
+		if (localStorage.getItem('notes') == null) {
+			localStorage.setItem('notes', JSON.stringify([]));
 		}
-
-		$scope.flash = {message: null};
+		$scope.flash = { message: null };
 
 		$scope.list = function() {
 			if ($scope.connectivity.status) {
 				console.log($scope.connectivity.text);
+				var localNotes = JSON.parse(localStorage.getItem('notes'));
 				var notes = [];
 				NoteSvc.query().$promise.then(function(response) {
 					angular.forEach(response, function(value, key) {
 						this.push(value);
 					}, notes);
 					$scope.notes = notes;
-					$cookieStore.put('notes', notes);
+					localStorage.setItem('notes', JSON.stringify(notes));
 				});
 			}
 			else {
 				console.log($scope.connectivity.text);
-				$scope.notes = $cookieStore.get('notes');
+				$scope.notes = JSON.parse(localStorage.getItem('notes'));
 			}
 		}
 		$scope.note = {};
@@ -39,7 +39,8 @@ controller('IndexCtrl', ['$scope', 'NoteSvc', '$cookieStore', '$filter',
 					});
 				}
 				else {
-					var notes = $cookieStore.get('notes');
+					var notes = localStorage.getItem('notes');
+					notes = JSON.parse(notes);
 					angular.forEach(notes, function(value, key) {
 						if (value.id == $scope.note.id) {
 							this[key] = $scope.note;
@@ -47,7 +48,7 @@ controller('IndexCtrl', ['$scope', 'NoteSvc', '$cookieStore', '$filter',
 							this[key].off = 'update';
 						}
 					}, notes);
-					$cookieStore.put('notes', notes);
+					localStorage.setItem('notes', JSON.stringify(notes));
 					$scope.flash.message = 'Nota alterada localmente com sucesso. Clique no botão sincronizar quando estiver online';
 				}
 			}
@@ -66,9 +67,9 @@ controller('IndexCtrl', ['$scope', 'NoteSvc', '$cookieStore', '$filter',
 					note.id = '?';
 					note.updated = $filter('date')(Date.now(), 'yyyy-MM-dd HH:mm:ss');
 					note.off = 'insert';
-					var notes = $cookieStore.get('notes');
+					var notes = JSON.parse(localStorage.getItem('notes'));
 					notes.push(note);
-					$cookieStore.put('notes', notes);
+					localStorage.setItem('notes', JSON.stringify(notes));
 					$scope.flash.message = 'Nota cadastrada localmente com sucesso. Clique no botão sincronizar quando estiver online';
 				}
 			}
@@ -77,7 +78,7 @@ controller('IndexCtrl', ['$scope', 'NoteSvc', '$cookieStore', '$filter',
 		}
 		$scope.sync = function() {
 			if ($scope.connectivity.status) {
-				var notes = $cookieStore.get('notes');
+				var notes = JSON.parse(localStorage.getItem('notes'));
 				angular.forEach(notes, function(value, key) {
 					if (value.hasOwnProperty('off')) {
 						switch(value.off) {
@@ -100,6 +101,7 @@ controller('IndexCtrl', ['$scope', 'NoteSvc', '$cookieStore', '$filter',
 				$scope.list();
 				console.log('Sincronizado');
 				$scope.flash.message = 'Dados sincronizados com com sucesso.';
+				$scope.notification.message = null;
 			}
 			else {
 				console.log($scope.connectivity.text);
@@ -107,8 +109,13 @@ controller('IndexCtrl', ['$scope', 'NoteSvc', '$cookieStore', '$filter',
 			}
 		}
 
-		$scope.update = function(id) {
-			$scope.note = NoteSvc.get({id: id});
+		$scope.update = function(note) {
+			if ($scope.connectivity.status) {
+				$scope.note = NoteSvc.get({id: note.id});
+			}
+			else {
+				$scope.note = note;
+			}
 		}
 		$scope.delete = function(id) {
 			if ($scope.connectivity.status) {
@@ -121,16 +128,22 @@ controller('IndexCtrl', ['$scope', 'NoteSvc', '$cookieStore', '$filter',
 				});
 			}
 			else {
-				var notes = $cookieStore.get('notes');
+				var notes = JSON.parse(localStorage.getItem('notes'));
 				angular.forEach(notes, function(value, key) {
 					if (value.id == id) {
 						this[key].off = 'delete';
 					}
 				}, notes);
-				$cookieStore.put('notes', notes);
+				localStorage.setItem('notes', JSON.stringify(notes));
 				$scope.list();
 				console.log('Apagado localmente');
 			}
 		}
+	    $scope.$on('connect', function(event, connectivity) {
+	    	console.log(connectivity);
+	    	if (navigator.onLine) {
+	    		$scope.sync();
+	    	};
+	    });
 	}
 ]);
